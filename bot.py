@@ -6,10 +6,17 @@ from scrapperr import *
 
 bot = Bot(config.token)
 dp = Dispatcher(bot)
-la_liga = [
+la_liga =  [
             "Реал Мадрид","Барселона","Атлетико Мадрид","Севилья","Альмерия","Атлетик Бильбао","Бетис","Валенсия","Вильярреал","Жирона",
             "Кадис","Мальорка","Осасуна","Райо Вальекано","Реал Вальядолид","Реал Сосьедад","Сельта","Хетафе","Эльче","Эспаньол"
-          ]
+           ]
+
+premier_league = [
+                    "Манчестер Сити","Ливерпуль","Манчестер Юнайтед","Челси","Тоттенхэм","Арсенал","Астон Вилла",
+                    "Борнмут","","Брайтон","Брентфорд","Вест Хэм","Вулверхэмптон","Кристал Пэлас","Лестер Сити",
+                    "Лидс Юнайтед","Ноттингем Форест","Ньюкасл","Саутгемптон","Фулхэм","Эвертон"
+                 ]
+
 
 @dp.message_handler(commands="start")
 async def start(message: types.Message):
@@ -33,7 +40,7 @@ async def Raspisanie(message: types.Message):
     datatime = []
     raspisanie_team1 = []
     raspisanie_team2 = []
-    raspisanie = [1,2,3,4,5,6]
+    raspisanie = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
     while i < 100:
         if footbal_schedule[i].text in (teams) or footbal_schedule[i+1].text in (teams):
             datatime.append(match_datatime[b].text)
@@ -46,7 +53,7 @@ async def Raspisanie(message: types.Message):
         raspisanie[i] = datatime[i] + ' ' + raspisanie_team1[i] + ' - ' +raspisanie_team2[i]
     i = 0
     while i < len(raspisanie)-1:
-        if raspisanie[i] in (1,2,3,4,5,6):
+        if raspisanie[i] in (1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20):
             del raspisanie[i]
         else:
             i += 1
@@ -93,8 +100,9 @@ async def Clear_All_Clubs(message: types.Message):
 @dp.message_handler(Text(equals="La Liga"))
 async def La_Liga(message: types.Message):
     La_Liga_buttons = [
-                        "Реал Мадрид","Барселона","Атлетико Мадрид","Севилья","Альмерия","Атлетик Бильбао","Бетис","Валенсия","Вильярреал","Жирона",
-                        "Кадис","Мальорка","Осасуна","Райо Вальекано","Реал Вальядолид","Реал Сосьедад","Сельта","Хетафе","Эльче","Эспаньол","Назад","В главное меню"
+                        "Реал Мадрид","Барселона","Атлетико Мадрид","Севилья","Альмерия","Атлетик Бильбао","Бетис",
+                        "Валенсия","Вильярреал","Жирона","Кадис","Мальорка","Осасуна","Райо Вальекано","Реал Вальядолид",
+                        "Реал Сосьедад","Сельта","Хетафе","Эльче","Эспаньол","Назад","В главное меню"
                       ]
 
     La_Liga_keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
@@ -108,54 +116,50 @@ async def La_Liga_Command(message: types.Message):
     team  = message.text
     with open("teams.txt", "a", encoding="utf-8") as file:
         print(team, file=file)
-    La_Liga_buttons = ["Реал Мадрид","Барселона","Атлетико Мадрид","Назад","В главное меню"]
+    La_Liga_buttons = [
+                        "Реал Мадрид","Барселона","Атлетико Мадрид","Севилья","Альмерия","Атлетик Бильбао","Бетис",
+                        "Валенсия","Вильярреал","Жирона","Кадис","Мальорка","Осасуна","Райо Вальекано","Реал Вальядолид",
+                        "Реал Сосьедад","Сельта","Хетафе","Эльче","Эспаньол","Назад","В главное меню"
+                      ]
+
     La_Liga_keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
     La_Liga_keyboard.add(*La_Liga_buttons)
 
-    await message.answer("Команда добавлена", reply_markup=La_Liga_keyboard)
+    await message.answer("Клуб добавлена", reply_markup=La_Liga_keyboard)
 
 
 
 @dp.message_handler(Text(equals="Premier League"))
 async def Premier_League(message: types.Message):
-    Premier_League_buttons = ["Манчестер Сити","Челси","Ливерпуль","Манчестер Юнайтед","Тотенхэм","Назад","В главное меню"]
+    Premier_League_buttons = [
+                              "Манчестер Сити","Ливерпуль","Манчестер Юнайтед","Челси","Тоттенхэм","Арсенал","Астон Вилла","Борнмут",
+                              "Брайтон","Брентфорд","Вест Хэм","Вулверхэмптон","Кристал Пэлас","Лестер Сити","Лидс Юнайтед",
+                              "Ноттингем Форест","Ньюкасл","Саутгемптон","Фулхэм","Эвертон","Назад","В главное меню"
+                             ]
+
     Premier_League_keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
     Premier_League_keyboard.add(*Premier_League_buttons)
 
     await message.answer("Выберите клуб(-ы)", reply_markup=Premier_League_keyboard)
 
 
-@dp.message_handler(Text(equals="Ливерпуль"))
+@dp.message_handler(Text(equals=premier_league))
 async def Premier_League_Command(message: types.Message):
     team3  = message.text
     with open("teams.txt", "a", encoding="utf-8") as file:
         print(team3, file=file)
-    Premier_League_Command_buttons = ["Добавить ещё клуб из Premier League","Назад","В главное меню"]
-    Premier_League_Command_keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    Premier_League_Command_keyboard.add(*Premier_League_Command_buttons)
-
-    await message.answer("Выберите что делать дальше", reply_markup=Premier_League_Command_keyboard)
-
-
-@dp.message_handler(Text(equals="Челси"))
-async def Premier_League_Command1(message: types.Message):
-    team4  = message.text
-    with open("teams.txt", "a", encoding="utf-8") as file:
-        print(team4, file=file)
-    Premier_League_Command_buttons = ["Добавить ещё клуб из Premier League","Назад","В главное меню"]
-    Premier_League_Command_keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    Premier_League_Command_keyboard.add(*Premier_League_Command_buttons)
-
-    await message.answer("Выберите что делать дальше", reply_markup=Premier_League_Command_keyboard)
-
-
-@dp.message_handler(Text(equals="Добавить ещё клуб из Premier League"))
-async def Premier_League1(message: types.Message):
-    Premier_League_buttons = ["Манчестер Сити","Челси","Ливерпуль","Манчестер Юнайтед","Тотенхэм","Назад","В главное меню"]
+    
+    Premier_League_buttons = [
+                              "Манчестер Сити","Ливерпуль","Манчестер Юнайтед","Челси","Тоттенхэм","Арсенал","Астон Вилла","Борнмут",
+                              "Брайтон","Брентфорд","Вест Хэм","Вулверхэмптон","Кристал Пэлас","Лестер Сити","Лидс Юнайтед",
+                              "Ноттингем Форест","Ньюкасл","Саутгемптон","Фулхэм","Эвертон","Назад","В главное меню"
+                             ]
+                             
     Premier_League_keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
     Premier_League_keyboard.add(*Premier_League_buttons)
 
-    await message.answer("Выберите клуб(-ы)", reply_markup=Premier_League_keyboard)
+    await message.answer("Клуб добавлен", reply_markup=Premier_League_keyboard)
+
 
 
 @dp.message_handler(Text(equals="Назад"))
