@@ -3,8 +3,9 @@ from bs4 import BeautifulSoup
 import datetime
 
 
-
-url = "https://soccer365.ru/online/&date=2022-08-20"
+date_today = datetime.datetime.today().strftime("%Y-%m-%d")
+url_without_date = "https://soccer365.ru/online/&date="
+url = url_without_date + date_today
 response = requests.get(url)
 soup = BeautifulSoup(response.text, 'lxml')
 footbal_schedule = soup.find_all('div', class_='name')
