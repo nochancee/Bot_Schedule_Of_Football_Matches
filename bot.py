@@ -6,6 +6,10 @@ from scrapperr import *
 
 bot = Bot(config.token)
 dp = Dispatcher(bot)
+la_liga = [
+            "Реал Мадрид","Барселона","Атлетико Мадрид","Севилья","Альмерия","Атлетик Бильбао","Бетис","Валенсия","Вильярреал","Жирона",
+            "Кадис","Мальорка","Осасуна","Райо Вальекано","Реал Вальядолид","Реал Сосьедад","Сельта","Хетафе","Эльче","Эспаньол"
+          ]
 
 @dp.message_handler(commands="start")
 async def start(message: types.Message):
@@ -49,7 +53,7 @@ async def Raspisanie(message: types.Message):
         
     del raspisanie[len(raspisanie)-1]
     if raspisanie == []:
-        await message.answer("Список пуст", reply_markup=Main_menu_keyboard)
+        await message.answer("Матчей нет", reply_markup=Main_menu_keyboard)
     else:
         for i in range(0,len(raspisanie)):
             await message.answer(raspisanie[i], reply_markup=Main_menu_keyboard)
@@ -70,7 +74,10 @@ async def List_Clubs(message: types.Message):
     with open("teams.txt", encoding="utf-8") as file:
         teams = file.readlines()
     teams = [x.replace('\n','') for x in teams]
-    await message.answer(teams, reply_markup=Main_menu_keyboard)
+    if teams == []:
+        await message.answer("Список пуст", reply_markup=Main_menu_keyboard)
+    else:
+        await message.answer(teams, reply_markup=Main_menu_keyboard)
     
 
 @dp.message_handler(Text(equals="Удалить все избранные клубы"))
@@ -85,43 +92,28 @@ async def Clear_All_Clubs(message: types.Message):
 
 @dp.message_handler(Text(equals="La Liga"))
 async def La_Liga(message: types.Message):
-    La_Liga_buttons = ["Реал Мадрид","Барселона","Назад","В главное меню"]
+    La_Liga_buttons = [
+                        "Реал Мадрид","Барселона","Атлетико Мадрид","Севилья","Альмерия","Атлетик Бильбао","Бетис","Валенсия","Вильярреал","Жирона",
+                        "Кадис","Мальорка","Осасуна","Райо Вальекано","Реал Вальядолид","Реал Сосьедад","Сельта","Хетафе","Эльче","Эспаньол","Назад","В главное меню"
+                      ]
+
     La_Liga_keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
     La_Liga_keyboard.add(*La_Liga_buttons)
 
     await message.answer("Выберите клуб(-ы)", reply_markup=La_Liga_keyboard)
 
 
-@dp.message_handler(Text(equals="Реал Мадрид"))
+@dp.message_handler(Text(equals=la_liga))
 async def La_Liga_Command(message: types.Message):
-    team1  = message.text
+    team  = message.text
     with open("teams.txt", "a", encoding="utf-8") as file:
-        print(team1, file=file)
-    Navigation_buttons = ["Добавить ещё клуб из La Liga","Назад","В главное меню"]
-    Navigation_keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    Navigation_keyboard.add(*Navigation_buttons)
-
-    await message.answer("Выберите что делать дальше", reply_markup=Navigation_keyboard)
-
-@dp.message_handler(Text(equals="Барселона"))
-async def La_Liga_Command1(message: types.Message):
-    team2  = message.text
-    with open("teams.txt", "a", encoding="utf-8") as file:
-        print(team2, file=file)
-    Navigation_buttons = ["Добавить ещё клуб из La Liga","Назад","В главное меню"]
-    Navigation_keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    Navigation_keyboard.add(*Navigation_buttons)
-
-    await message.answer("Выберите что делать дальше", reply_markup=Navigation_keyboard)
-
-
-@dp.message_handler(Text(equals="Добавить ещё клуб из La Liga"))
-async def Add_La_Liga_Clubs_More(message: types.Message):
-    La_Liga_buttons = ["Реал Мадрид","Барселона","Назад","В главное меню"]
+        print(team, file=file)
+    La_Liga_buttons = ["Реал Мадрид","Барселона","Атлетико Мадрид","Назад","В главное меню"]
     La_Liga_keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
     La_Liga_keyboard.add(*La_Liga_buttons)
 
-    await message.answer("Выберите клуб(-ы)", reply_markup=La_Liga_keyboard)
+    await message.answer("Команда добавлена", reply_markup=La_Liga_keyboard)
+
 
 
 @dp.message_handler(Text(equals="Premier League"))
