@@ -1,0 +1,6 @@
+*log
+config.py
+teams.txt
+env/
+.vscode/
+__pycache__/
