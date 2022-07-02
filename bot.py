@@ -17,6 +17,10 @@ premier_league = [
                     "Лидс Юнайтед","Ноттингем Форест","Ньюкасл","Саутгемптон","Фулхэм","Эвертон"
                  ]
 
+serie_a = [
+            "Милан","Интер","Ювентус","Рома","Лацио","Наполи","Фиорентина","Аталанта","Болонья","Верона","Кремонезе",
+            "Лечче","Монца","Салернитана","Сампдория","Сассуоло","Специя","Торино","Удинезе","Эмполи"
+          ]
 
 @dp.message_handler(commands="start")
 async def start(message: types.Message):
@@ -145,9 +149,9 @@ async def Premier_League(message: types.Message):
 
 @dp.message_handler(Text(equals=premier_league))
 async def Premier_League_Command(message: types.Message):
-    team3  = message.text
+    team  = message.text
     with open("teams.txt", "a", encoding="utf-8") as file:
-        print(team3, file=file)
+        print(team, file=file)
     
     Premier_League_buttons = [
                               "Манчестер Сити","Ливерпуль","Манчестер Юнайтед","Челси","Тоттенхэм","Арсенал","Астон Вилла","Борнмут",
@@ -161,6 +165,34 @@ async def Premier_League_Command(message: types.Message):
     await message.answer("Клуб добавлен", reply_markup=Premier_League_keyboard)
 
 
+@dp.message_handler(Text(equals="Serie A"))
+async def Serie_A(message: types.Message):
+    Serie_A_buttons = [
+                        "Милан","Интер","Ювентус","Рома","Лацио","Наполи","Фиорентина","Аталанта","Болонья","Верона","Кремонезе","Лечче",
+                        "Монца","Салернитана","Сампдория","Сассуоло","Специя","Торино","Удинезе","Эмполи","Назад","В главное меню"
+                      ]
+
+    Serie_A_keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    Serie_A_keyboard.add(*Serie_A_buttons)
+
+    await message.answer("Выберите клуб(-ы)", reply_markup=Serie_A_keyboard)
+
+
+@dp.message_handler(Text(equals=serie_a))
+async def Serie_A_Command(message: types.Message):
+    team  = message.text
+    with open("teams.txt", "a", encoding="utf-8") as file:
+        print(team, file=file)
+    
+    Serie_A_buttons = [
+                        "Милан","Интер","Ювентус","Рома","Лацио","Наполи","Фиорентина","Аталанта","Болонья","Верона","Кремонезе","Лечче",
+                        "Монца","Салернитана","Сампдория","Сассуоло","Специя","Торино","Удинезе","Эмполи","Назад","В главное меню"
+                      ]
+                             
+    Serie_A_keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    Serie_A_keyboard.add(*Serie_A_buttons)
+
+    await message.answer("Клуб добавлен", reply_markup=Serie_A_keyboard)
 
 @dp.message_handler(Text(equals="Назад"))
 async def start1(message: types.Message):
