@@ -26,10 +26,17 @@ bundesliga = [
               "Бавария","Боруссия Дортмунд","Боруссия М","РБ Лейпциг","Айнтрахт Франкфурт","Аугсбург","Байер","Бохум",
               "Вердер","Вольфсбург","Герта","Кёльн","Майнц","Унион Берлин","Фрайбург","Хоффенхайм","Шальке","Штутгарт"
              ]
+
 ligue_1 = [
            "ПСЖ","Лион","Лилль","Монако","Марсель","Анже","Аяччо","Брест","Клермон","Ланс",
            "Лорьян","Монпелье","Нант","Ницца","Осер","Реймс","Ренн","Страсбур","Труа","Тулуза"
           ]
+
+rpl = [
+       "Зенит","ЦСКА Москва","Спартак","Динамо Москва","Локомотив Москва","Ростов","Ахмат","Краснодар",
+       "Крылья Советов","Оренбург","Пари НН","ПФК Сочи","Торпедо Москва","Урал","Факел","Химки"
+      ]
+
 
 @dp.message_handler(commands="start")
 async def start(message: types.Message):
@@ -260,6 +267,36 @@ async def Ligue_1_Clubs(message: types.Message):
     Ligue_1_keyboard.add(*Ligue_1_buttons)
 
     await message.answer("Выберите клуб(-ы)", reply_markup=Ligue_1_keyboard)
+
+
+@dp.message_handler(Text(equals="РПЛ"))
+async def RPL(message: types.Message):
+    RPL_buttons = [
+                   "Зенит","ЦСКА Москва","Спартак","Динамо Москва","Локомотив Москва","Ростов","Ахмат","Краснодар","Крылья Советов",
+                   "Оренбург","Пари НН","ПФК Сочи","Торпедо Москва","Урал","Факел","Химки","Назад","В главное меню"
+                  ]
+
+    RPL_keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    RPL_keyboard.add(*RPL_buttons)
+
+    await message.answer("Выберите клуб(-ы)", reply_markup=RPL_keyboard)
+
+
+@dp.message_handler(Text(equals=rpl))
+async def RPL_Clubs(message: types.Message):
+    team  = message.text
+    with open("teams.txt", "a", encoding="utf-8") as file:
+        print(team, file=file)
+    RPL_buttons = [
+                   "Зенит","ЦСКА Москва","Спартак","Динамо Москва","Локомотив Москва","Ростов","Ахмат","Краснодар","Крылья Советов",
+                   "Оренбург","Пари НН","ПФК Сочи","Торпедо Москва","Урал","Факел","Химки","Назад","В главное меню"
+                  ]
+
+    RPL_keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    RPL_keyboard.add(*RPL_buttons)
+
+    await message.answer("Выберите клуб(-ы)", reply_markup=RPL_keyboard)
+
 
 
 @dp.message_handler(Text(equals="Назад"))
