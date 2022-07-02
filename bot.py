@@ -1,7 +1,7 @@
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.dispatcher.filters import Text
 import config
-from scrapperr import *
+from scrapper import *
 
 
 bot = Bot(config.token)
@@ -49,7 +49,7 @@ async def start(message: types.Message):
 
 @dp.message_handler(Text(equals="Расписание матчей"))
 async def Raspisanie(message: types.Message):
-    Main_menu_buttons = ["Расписание матчей","Добавить новый(-е) клуб(-ы)","Список избранных клубов","Удалить все избранные клубы" ]
+    Main_menu_buttons = ["Расписание матчей","Расписание на завтра","Добавить новый(-е) клуб(-ы)","Список избранных клубов","Удалить все избранные клубы" ]
     Main_menu_keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
     Main_menu_keyboard.add(*Main_menu_buttons)
     with open("teams.txt", encoding="utf-8") as file:
@@ -85,6 +85,46 @@ async def Raspisanie(message: types.Message):
         for i in range(0,len(raspisanie)):
             await message.answer(raspisanie[i], reply_markup=Main_menu_keyboard)
 
+
+@dp.message_handler(Text(equals="Расписание на завтра"))
+async def Raspisanie_Tomorrow(message: types.Message):
+    Main_menu_buttons = ["Расписание матчей","Расписание на завтра","Добавить новый(-е) клуб(-ы)","Список избранных клубов","Удалить все избранные клубы" ]
+    Main_menu_keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    Main_menu_keyboard.add(*Main_menu_buttons)
+    with open("teams.txt", encoding="utf-8") as file:
+        teams = file.readlines()
+    teams = [x.replace('\n','') for x in teams]
+    i = 0
+    b = 0
+    datatime_tomorrow = []
+    raspisanie_team1_tomorrow = []
+    raspisanie_team2_tomorrow = []
+    raspisanie_tomorrow = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
+    while i < 100:
+        if footbal_schedule_tomorrow[i].text in (teams) or footbal_schedule_tomorrow[i+1].text in (teams):
+            datatime_tomorrow.append(match_datatime_tomorrow[b].text)
+            raspisanie_team1_tomorrow.append(footbal_schedule_tomorrow[i].text)
+            raspisanie_team2_tomorrow.append(footbal_schedule_tomorrow[i+1].text)
+        b += 1
+        i += 2
+
+    for i in range(0, len(datatime_tomorrow)):
+        raspisanie_tomorrow[i] = datatime_tomorrow[i] + ' ' + raspisanie_team1_tomorrow[i] + ' - ' +raspisanie_team2_tomorrow[i]
+    i = 0
+    while i < len(raspisanie_tomorrow)-1:
+        if raspisanie_tomorrow[i] in (1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20):
+            del raspisanie_tomorrow[i]
+        else:
+            i += 1
+        
+    del raspisanie_tomorrow[len(raspisanie_tomorrow)-1]
+    if raspisanie_tomorrow == []:
+        await message.answer("Матчей нет", reply_markup=Main_menu_keyboard)
+    else:
+        for i in range(0,len(raspisanie_tomorrow)):
+            await message.answer(raspisanie_tomorrow[i], reply_markup=Main_menu_keyboard)
+
+
 @dp.message_handler(Text(equals="Добавить новый(-е) клуб(-ы)"))
 async def Add_Club(message: types.Message):
     League_buttons = ["La Liga", "Premier League", "Serie A", "Bundesliga", "Ligue 1", "РПЛ","В главное меню"]
@@ -95,7 +135,7 @@ async def Add_Club(message: types.Message):
     
 @dp.message_handler(Text(equals="Список избранных клубов"))
 async def List_Clubs(message: types.Message):
-    Main_menu_buttons = ["Расписание матчей","Добавить новый(-е) клуб(-ы)","Список избранных клубов","Удалить все избранные клубы" ]
+    Main_menu_buttons = ["Расписание матчей","Расписание на завтра","Добавить новый(-е) клуб(-ы)","Список избранных клубов","Удалить все избранные клубы" ]
     Main_menu_keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
     Main_menu_keyboard.add(*Main_menu_buttons)
     with open("teams.txt", encoding="utf-8") as file:
@@ -109,7 +149,7 @@ async def List_Clubs(message: types.Message):
 
 @dp.message_handler(Text(equals="Удалить все избранные клубы"))
 async def Clear_All_Clubs(message: types.Message):
-    Main_menu_buttons = ["Расписание матчей","Добавить новый(-е) клуб(-ы)","Список избранных клубов","Удалить все избранные клубы" ]
+    Main_menu_buttons = ["Расписание матчей","Расписание на завтра","Добавить новый(-е) клуб(-ы)","Список избранных клубов","Удалить все избранные клубы" ]
     Main_menu_keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
     Main_menu_keyboard.add(*Main_menu_buttons)
     with open("teams.txt",'w', encoding="utf-8") as f:
@@ -310,7 +350,7 @@ async def start1(message: types.Message):
 
 @dp.message_handler(Text(equals="В главное меню"))
 async def In_Main_Menu(message: types.Message):
-    Main_menu_buttons = ["Расписание матчей","Добавить новый(-е) клуб(-ы)","Список избранных клубов","Удалить все избранные клубы" ]
+    Main_menu_buttons = ["Расписание матчей","Расписание на завтра","Добавить новый(-е) клуб(-ы)","Список избранных клубов","Удалить все избранные клубы" ]
     Main_menu_keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
     Main_menu_keyboard.add(*Main_menu_buttons)
     await message.answer("Вы в главном меню!", reply_markup=Main_menu_keyboard)
