@@ -22,6 +22,11 @@ serie_a = [
             "Лечче","Монца","Салернитана","Сампдория","Сассуоло","Специя","Торино","Удинезе","Эмполи"
           ]
 
+bundesliga = [
+              "Бавария","Боруссия Дортмунд","Боруссия М","РБ Лейпциг","Айнтрахт Франкфурт","Аугсбург","Байер","Бохум",
+              "Вердер","Вольфсбург","Герта","Кёльн","Майнц","Унион Берлин","Фрайбург","Хоффенхайм","Шальке","Штутгарт"
+             ]
+
 @dp.message_handler(commands="start")
 async def start(message: types.Message):
     League_buttons = ["La Liga", "Premier League", "Serie A", "Bundesliga", "Ligue 1", "РПЛ","В главное меню"]
@@ -116,7 +121,7 @@ async def La_Liga(message: types.Message):
 
 
 @dp.message_handler(Text(equals=la_liga))
-async def La_Liga_Command(message: types.Message):
+async def La_Liga_Clubs(message: types.Message):
     team  = message.text
     with open("teams.txt", "a", encoding="utf-8") as file:
         print(team, file=file)
@@ -148,7 +153,7 @@ async def Premier_League(message: types.Message):
 
 
 @dp.message_handler(Text(equals=premier_league))
-async def Premier_League_Command(message: types.Message):
+async def Premier_League_Clubs(message: types.Message):
     team  = message.text
     with open("teams.txt", "a", encoding="utf-8") as file:
         print(team, file=file)
@@ -179,7 +184,7 @@ async def Serie_A(message: types.Message):
 
 
 @dp.message_handler(Text(equals=serie_a))
-async def Serie_A_Command(message: types.Message):
+async def Serie_A_Clubs(message: types.Message):
     team  = message.text
     with open("teams.txt", "a", encoding="utf-8") as file:
         print(team, file=file)
@@ -193,6 +198,36 @@ async def Serie_A_Command(message: types.Message):
     Serie_A_keyboard.add(*Serie_A_buttons)
 
     await message.answer("Клуб добавлен", reply_markup=Serie_A_keyboard)
+
+
+@dp.message_handler(Text(equals="Bundesliga"))
+async def Bundesliga(message: types.Message):
+    Bundesliga_buttons = [
+                          "Бавария","Боруссия Дортмунд","Боруссия М","РБ Лейпциг","Айнтрахт Франкфурт","Аугсбург","Байер","Бохум","Вердер",
+                          "Вольфсбург","Герта","Кёльн","Майнц","Унион Берлин","Фрайбург","Хоффенхайм","Шальке","Штутгарт","Назад","В главное меню"
+                         ]
+
+    Bundesliga_keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    Bundesliga_keyboard.add(*Bundesliga_buttons)
+
+    await message.answer("Выберите клуб(-ы)", reply_markup=Bundesliga_keyboard)
+
+
+@dp.message_handler(Text(equals=bundesliga))
+async def Bundesliga_Clubs(message: types.Message):
+    team  = message.text
+    with open("teams.txt", "a", encoding="utf-8") as file:
+        print(team, file=file)
+    Bundesliga_buttons = [
+                          "Бавария","Боруссия Дортмунд","Боруссия М","РБ Лейпциг","Айнтрахт Франкфурт","Аугсбург","Байер","Бохум","Вердер",
+                          "Вольфсбург","Герта","Кёльн","Майнц","Унион Берлин","Фрайбург","Хоффенхайм","Шальке","Штутгарт","Назад","В главное меню"
+                         ]
+
+    Bundesliga_keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    Bundesliga_keyboard.add(*Bundesliga_buttons)
+
+    await message.answer("Выберите клуб(-ы)", reply_markup=Bundesliga_keyboard)
+
 
 @dp.message_handler(Text(equals="Назад"))
 async def start1(message: types.Message):
