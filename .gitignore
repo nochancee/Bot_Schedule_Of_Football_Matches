@@ -4,3 +4,4 @@ teams.txt
 env/
 .vscode/
 __pycache__/
+clubs.sqlite

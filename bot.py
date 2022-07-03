@@ -2,8 +2,9 @@ from aiogram import Bot, Dispatcher, executor, types
 from aiogram.dispatcher.filters import Text
 import config
 from scrapper import *
+from dbhelperrr import DBHelper
 
-
+db = DBHelper()
 bot = Bot(config.token)
 dp = Dispatcher(bot)
 la_liga =  [
@@ -34,7 +35,7 @@ ligue_1 = [
 
 rpl = [
        "Зенит","ЦСКА Москва","Спартак","Динамо Москва","Локомотив Москва","Ростов","Ахмат","Краснодар",
-       "Крылья Советов","Оренбург","Пари НН","ПФК Сочи","Торпедо Москва","Урал","Факел","Химки"
+       "Крылья Советов","Оренбург","Пари Нижний Новгород","ПФК Сочи","Торпедо Москва","Урал","Факел","Химки"
       ]
 
 
@@ -52,9 +53,8 @@ async def Raspisanie(message: types.Message):
     Main_menu_buttons = ["Расписание матчей","Расписание на завтра","Добавить новый(-е) клуб(-ы)","Список избранных клубов","Удалить все избранные клубы" ]
     Main_menu_keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
     Main_menu_keyboard.add(*Main_menu_buttons)
-    with open("teams.txt", encoding="utf-8") as file:
-        teams = file.readlines()
-    teams = [x.replace('\n','') for x in teams]
+    user_id = message.from_user.id
+    clubs = db.get_items(user_id)
     i = 0
     b = 0
     datatime = []
@@ -62,7 +62,7 @@ async def Raspisanie(message: types.Message):
     raspisanie_team2 = []
     raspisanie = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
     while i < 100:
-        if footbal_schedule[i].text in (teams) or footbal_schedule[i+1].text in (teams):
+        if footbal_schedule[i].text in (clubs) or footbal_schedule[i+1].text in (clubs):
             datatime.append(match_datatime[b].text)
             raspisanie_team1.append(footbal_schedule[i].text)
             raspisanie_team2.append(footbal_schedule[i+1].text)
@@ -91,9 +91,8 @@ async def Raspisanie_Tomorrow(message: types.Message):
     Main_menu_buttons = ["Расписание матчей","Расписание на завтра","Добавить новый(-е) клуб(-ы)","Список избранных клубов","Удалить все избранные клубы" ]
     Main_menu_keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
     Main_menu_keyboard.add(*Main_menu_buttons)
-    with open("teams.txt", encoding="utf-8") as file:
-        teams = file.readlines()
-    teams = [x.replace('\n','') for x in teams]
+    user_id = message.from_user.id
+    clubs = db.get_items(user_id)
     i = 0
     b = 0
     datatime_tomorrow = []
@@ -101,7 +100,7 @@ async def Raspisanie_Tomorrow(message: types.Message):
     raspisanie_team2_tomorrow = []
     raspisanie_tomorrow = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
     while i < 100:
-        if footbal_schedule_tomorrow[i].text in (teams) or footbal_schedule_tomorrow[i+1].text in (teams):
+        if footbal_schedule_tomorrow[i].text in (clubs) or footbal_schedule_tomorrow[i+1].text in (clubs):
             datatime_tomorrow.append(match_datatime_tomorrow[b].text)
             raspisanie_team1_tomorrow.append(footbal_schedule_tomorrow[i].text)
             raspisanie_team2_tomorrow.append(footbal_schedule_tomorrow[i+1].text)
@@ -138,13 +137,12 @@ async def List_Clubs(message: types.Message):
     Main_menu_buttons = ["Расписание матчей","Расписание на завтра","Добавить новый(-е) клуб(-ы)","Список избранных клубов","Удалить все избранные клубы" ]
     Main_menu_keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
     Main_menu_keyboard.add(*Main_menu_buttons)
-    with open("teams.txt", encoding="utf-8") as file:
-        teams = file.readlines()
-    teams = [x.replace('\n','') for x in teams]
-    if teams == []:
+    user_id = message.from_user.id
+    clubs = db.get_items(user_id)
+    if clubs == []:
         await message.answer("Список пуст", reply_markup=Main_menu_keyboard)
     else:
-        await message.answer(teams, reply_markup=Main_menu_keyboard)
+        await message.answer(clubs, reply_markup=Main_menu_keyboard)
     
 
 @dp.message_handler(Text(equals="Удалить все избранные клубы"))
@@ -152,8 +150,8 @@ async def Clear_All_Clubs(message: types.Message):
     Main_menu_buttons = ["Расписание матчей","Расписание на завтра","Добавить новый(-е) клуб(-ы)","Список избранных клубов","Удалить все избранные клубы" ]
     Main_menu_keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
     Main_menu_keyboard.add(*Main_menu_buttons)
-    with open("teams.txt",'w', encoding="utf-8") as f:
-        pass
+    user_id = message.from_user.id
+    db.delete_item(user_id)
     await message.answer("Список избранных клубов очищен!", reply_markup=Main_menu_keyboard)
 
 
@@ -174,8 +172,8 @@ async def La_Liga(message: types.Message):
 @dp.message_handler(Text(equals=la_liga))
 async def La_Liga_Clubs(message: types.Message):
     team  = message.text
-    with open("teams.txt", "a", encoding="utf-8") as file:
-        print(team, file=file)
+    user_id = message.from_user.id
+    db.add_item(team, user_id)
     La_Liga_buttons = [
                        "Реал Мадрид","Барселона","Атлетико Мадрид","Севилья","Альмерия","Атлетик Бильбао","Бетис",
                        "Валенсия","Вильярреал","Жирона","Кадис","Мальорка","Осасуна","Райо Вальекано","Реал Вальядолид",
@@ -206,8 +204,8 @@ async def Premier_League(message: types.Message):
 @dp.message_handler(Text(equals=premier_league))
 async def Premier_League_Clubs(message: types.Message):
     team  = message.text
-    with open("teams.txt", "a", encoding="utf-8") as file:
-        print(team, file=file)
+    user_id = message.from_user.id
+    db.add_item(team, user_id)
     
     Premier_League_buttons = [
                               "Манчестер Сити","Ливерпуль","Манчестер Юнайтед","Челси","Тоттенхэм","Арсенал","Астон Вилла","Борнмут",
@@ -237,8 +235,8 @@ async def Serie_A(message: types.Message):
 @dp.message_handler(Text(equals=serie_a))
 async def Serie_A_Clubs(message: types.Message):
     team  = message.text
-    with open("teams.txt", "a", encoding="utf-8") as file:
-        print(team, file=file)
+    user_id = message.from_user.id
+    db.add_item(team, user_id)
     
     Serie_A_buttons = [
                        "Милан","Интер","Ювентус","Рома","Лацио","Наполи","Фиорентина","Аталанта","Болонья","Верона","Кремонезе","Лечче",
@@ -267,8 +265,9 @@ async def Bundesliga(message: types.Message):
 @dp.message_handler(Text(equals=bundesliga))
 async def Bundesliga_Clubs(message: types.Message):
     team  = message.text
-    with open("teams.txt", "a", encoding="utf-8") as file:
-        print(team, file=file)
+    user_id = message.from_user.id
+    db.add_item(team, user_id)
+
     Bundesliga_buttons = [
                           "Бавария","Боруссия Дортмунд","Боруссия М","РБ Лейпциг","Айнтрахт Франкфурт","Аугсбург","Байер","Бохум","Вердер",
                           "Вольфсбург","Герта","Кёльн","Майнц","Унион Берлин","Фрайбург","Хоффенхайм","Шальке","Штутгарт","Назад","В главное меню"
@@ -296,8 +295,9 @@ async def Ligue_1(message: types.Message):
 @dp.message_handler(Text(equals=ligue_1))
 async def Ligue_1_Clubs(message: types.Message):
     team  = message.text
-    with open("teams.txt", "a", encoding="utf-8") as file:
-        print(team, file=file)
+    user_id = message.from_user.id
+    db.add_item(team, user_id)
+
     Ligue_1_buttons = [
                        "ПСЖ","Лион","Лилль","Монако","Марсель","Анже","Аяччо","Брест","Клермон","Ланс","Лорьян","Монпелье",
                        "Нант","Ницца","Осер","Реймс","Ренн","Страсбур","Труа","Тулуза","Назад","В главное меню"
@@ -313,7 +313,7 @@ async def Ligue_1_Clubs(message: types.Message):
 async def RPL(message: types.Message):
     RPL_buttons = [
                    "Зенит","ЦСКА Москва","Спартак","Динамо Москва","Локомотив Москва","Ростов","Ахмат","Краснодар","Крылья Советов",
-                   "Оренбург","Пари НН","ПФК Сочи","Торпедо Москва","Урал","Факел","Химки","Назад","В главное меню"
+                   "Оренбург","Пари Нижний Новгород","ПФК Сочи","Торпедо Москва","Урал","Факел","Химки","Назад","В главное меню"
                   ]
 
     RPL_keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
@@ -325,11 +325,12 @@ async def RPL(message: types.Message):
 @dp.message_handler(Text(equals=rpl))
 async def RPL_Clubs(message: types.Message):
     team  = message.text
-    with open("teams.txt", "a", encoding="utf-8") as file:
-        print(team, file=file)
+    user_id = message.from_user.id
+    db.add_item(team, user_id)
+
     RPL_buttons = [
                    "Зенит","ЦСКА Москва","Спартак","Динамо Москва","Локомотив Москва","Ростов","Ахмат","Краснодар","Крылья Советов",
-                   "Оренбург","Пари НН","ПФК Сочи","Торпедо Москва","Урал","Факел","Химки","Назад","В главное меню"
+                   "Оренбург","Пари Нижний Новгород","ПФК Сочи","Торпедо Москва","Урал","Факел","Химки","Назад","В главное меню"
                   ]
 
     RPL_keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
@@ -361,4 +362,5 @@ def main():
 
 
 if __name__ == "__main__":
+    db.setup()
     main()
