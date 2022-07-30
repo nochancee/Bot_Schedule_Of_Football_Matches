@@ -14,9 +14,9 @@ url_tomorrow = url_without_date + date_tomorrow
 response = requests.get(url)
 soup = BeautifulSoup(response.text, 'lxml')
 footbal_schedule = soup.find_all('div', class_='name')
-match_datatime = soup.find_all('span', class_='size10')
+match_datatime = soup.find_all('span', class_='size11')
 
 response_tomorrow = requests.get(url_tomorrow)
 soup_tomorrow = BeautifulSoup(response_tomorrow.text, 'lxml')
 footbal_schedule_tomorrow = soup_tomorrow.find_all('div', class_='name')
-match_datatime_tomorrow = soup_tomorrow.find_all('span', class_='size10')
+match_datatime_tomorrow = soup_tomorrow.find_all('span', class_='size11')
