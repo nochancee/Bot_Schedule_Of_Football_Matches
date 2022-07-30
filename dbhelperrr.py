@@ -31,9 +31,9 @@ class DBHelper:
         sqlite_select_query = """SELECT * from items"""
         cursor.execute(sqlite_select_query)
         records = cursor.fetchall()
-        clubs_1 = []
+        clubs = []
         for row in records:
             if str(row[1]) == str(user_id):
-                clubs_1.append(row[0])
+                clubs.append(row[0])
         cursor.close()
-        return(clubs_1)
+        return(clubs)

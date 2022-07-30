@@ -1,10 +1,12 @@
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.dispatcher.filters import Text
+
 import config
 from scrapper import *
 from dbhelperrr import DBHelper
 
 db = DBHelper()
+
 bot = Bot(config.token)
 dp = Dispatcher(bot)
 la_liga =  [
@@ -183,7 +185,7 @@ async def La_Liga_Clubs(message: types.Message):
     La_Liga_keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
     La_Liga_keyboard.add(*La_Liga_buttons)
 
-    await message.answer("Клуб добавлена", reply_markup=La_Liga_keyboard)
+    await message.answer("Клуб добавлен", reply_markup=La_Liga_keyboard)
 
 
 
@@ -276,7 +278,7 @@ async def Bundesliga_Clubs(message: types.Message):
     Bundesliga_keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
     Bundesliga_keyboard.add(*Bundesliga_buttons)
 
-    await message.answer("Выберите клуб(-ы)", reply_markup=Bundesliga_keyboard)
+    await message.answer("Клуб добавлен", reply_markup=Bundesliga_keyboard)
 
 
 @dp.message_handler(Text(equals="Ligue 1"))
@@ -306,7 +308,7 @@ async def Ligue_1_Clubs(message: types.Message):
     Ligue_1_keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
     Ligue_1_keyboard.add(*Ligue_1_buttons)
 
-    await message.answer("Выберите клуб(-ы)", reply_markup=Ligue_1_keyboard)
+    await message.answer("Клуб добавлен", reply_markup=Ligue_1_keyboard)
 
 
 @dp.message_handler(Text(equals="РПЛ"))
@@ -336,7 +338,7 @@ async def RPL_Clubs(message: types.Message):
     RPL_keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
     RPL_keyboard.add(*RPL_buttons)
 
-    await message.answer("Выберите клуб(-ы)", reply_markup=RPL_keyboard)
+    await message.answer("Клуб добавлен", reply_markup=RPL_keyboard)
 
 
 
